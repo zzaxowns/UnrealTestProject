@@ -23,12 +23,20 @@ public:
 	// Sets default values for this character's properties
 	ATestPlayer();
 
+	enum State { // 플레이어의 상태를 표시하는 자료형
+		idle,
+		run,
+		dash,
+		attack
+	};
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UCameraComponent * Camera; // 카메라 추가
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent * Arm; // 카메라에 달린 봉(셀카봉을 생각하자)
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -42,6 +50,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	State playerState;
+
 	//이동 관련 내용 바인딩할 함수
 	UFUNCTION()
 		void MoveForward(float Value);
@@ -50,7 +60,7 @@ public:
 		void MoveRight(float Value);
 
 	UFUNCTION()
-		void GoToIdle();
+		void DoIdle();
 
 	//애니메이션 관련 함수
 	UFUNCTION()
@@ -61,4 +71,7 @@ public:
 
 	UFUNCTION()
 		void DoDash();
+
+	UFUNCTION()
+		void playerAnimation();
 };

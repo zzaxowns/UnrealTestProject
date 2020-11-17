@@ -36,8 +36,10 @@ private:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = MyInstance, meta = (AllowPrivateAccess = "true"))
 	bool bIsAttack;
 
+public:
 	UAnimMontage *attackMontage;
 	UAnimMontage *runMontage;
 	UAnimMontage *idleMontage;
 	UAnimMontage *dashMontage;
+
 };

@@ -41,20 +41,20 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds) {
 
 void UMyAnimInstance::Attack() {
 	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, TEXT("Attack Function Active"));
-	//ToDo: Play Attack Montage
 	Montage_Play(attackMontage);
 }
 
 void UMyAnimInstance::Run() {
 	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, TEXT("Attack Function Active"));
-	//ToDo: Play Attack Montage
 	Montage_Play(runMontage);
 }
 
 void UMyAnimInstance::Idle() {
+
 	Montage_Play(idleMontage);
 }
 
 void UMyAnimInstance::Dash() {
+
 	Montage_Play(dashMontage);
 }

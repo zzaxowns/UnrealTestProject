@@ -53,6 +53,7 @@ ATestPlayer::ATestPlayer()
 		GetMesh()->SetAnimInstanceClass(BLADER_ANIM.Class);
 	}
 
+	playerState = idle; // 맨 처음 플레이어의 상태를 idle로 지정
 }
 
 // Called when the game starts or when spawned
@@ -73,7 +74,7 @@ void ATestPlayer::PostInitilizeComponent()
 void ATestPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	playerAnimation(); // 스테이트에 따른 애니메이션을 실행시켜주는 함수
 }
 
 // Called to bind functionality to input
@@ -85,10 +86,6 @@ void ATestPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("Turn", this, &ATestPlayer::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &ATestPlayer::AddControllerPitchInput);
 
-	//점프 관련 함수 연결
-	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ATestPlayer::DoDash);
-	//PlayerInputComponent->BindAction("Dash", IE_Released, this, &ATestPlayer::GoToIdle);
-
 	//캐릭터 이동 관련 함수 바인딩
 	PlayerInputComponent->BindAxis("MoveForward", this, &ATestPlayer::MoveForward); // 전방이동 세팅해둔걸 만들어 놓은 함수랑 연결
 	PlayerInputComponent->BindAxis("MoveRight", this, &ATestPlayer::MoveRight);// 측면이동 세팅해둔걸 만들어 놓은 함수랑 연결
@@ -96,7 +93,11 @@ void ATestPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	//캐릭터 애니메이션 관련 함수 바인딩
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &ATestPlayer::DoAttack); // 공격 애니메이션 추가
 	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ATestPlayer::DoRun); //이동 애니메이션 추가
-	PlayerInputComponent->BindAction("Run", IE_Released, this, &ATestPlayer::GoToIdle); // 이동하지 않을 때의 애니메이션
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &ATestPlayer::DoIdle); // 이동하지 않을 때의 애니메이션
+
+	//대쉬 관련 함수 연결
+	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ATestPlayer::DoDash);
+	//PlayerInputComponent->BindAction("Dash", IE_Released, this, &ATestPlayer::GoToIdle);
 }
 
 void ATestPlayer::MoveForward(float Value) {
@@ -109,10 +110,6 @@ void ATestPlayer::MoveForward(float Value) {
 	FVector Direction = FRotationMatrix(YawRotation).GetScaledAxis(EAxis::X);
 	//FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
 	AddMovementInput(Direction, Value);
-
-	//if (myAnimInst != nullptr) {
-	//	myAnimInst->Run();
-	//}
 }
 
 void ATestPlayer::MoveRight(float Value) {
@@ -124,32 +121,68 @@ void ATestPlayer::MoveRight(float Value) {
 	//FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
 	AddMovementInput(Direction, Value);
 
-	/*if (myAnimInst != nullptr) {
-		myAnimInst->Run();
-	}*/
 }
 
 void ATestPlayer::DoAttack()
 {
+	if (playerState != attack) { playerState = attack; }
+	
 	if (myAnimInst != nullptr) {
 		myAnimInst->Attack();
 	}
 }
 
 void ATestPlayer::DoRun() {
+	if (playerState != run) { playerState = run; }
+
 	if (myAnimInst != nullptr) {
 		myAnimInst->Run();
 	}
 }
 
-void ATestPlayer::GoToIdle() {
+void ATestPlayer::DoIdle() {
+	if (playerState != idle) { playerState = idle; }
+
 	if (myAnimInst != nullptr) {
 		myAnimInst->Idle();
 	}
 }
 
 void ATestPlayer::DoDash(){
+	if (playerState != dash) { playerState = dash; }
+
 	if (myAnimInst != nullptr) {
 		myAnimInst->Dash();
+	}
+}
+
+void ATestPlayer::playerAnimation()
+{
+	if (myAnimInst != nullptr) { //myAnimInst가 null이 아니라면 상태에 따라 애니메이션 ㅅ
+
+		switch (playerState) {
+			case idle:
+				if (playerState == idle && !(myAnimInst->Montage_IsPlaying(myAnimInst->idleMontage))) {
+					DoIdle(); // idle 상태인데 애니메이션이 작동하지 않으면 애니메이션을 작동시킴
+				}
+				break;
+			case run:
+				if (playerState == run && !(myAnimInst->Montage_IsPlaying(myAnimInst->runMontage))) {
+					DoRun(); // run 상태인데 애니메이션이 작동하지 않으면 애니메이션을 작동시킴
+				}
+				break;
+			case dash:
+				if (playerState == dash && !(myAnimInst->Montage_IsPlaying(myAnimInst->dashMontage))) {
+					DoDash(); // dash 상태인데 애니메이션이 작동하지 않으면 애니메이션을 작동시킴
+				}
+				break;
+			case attack:
+				if (playerState == attack && !(myAnimInst->Montage_IsPlaying(myAnimInst->attackMontage))) {
+					DoAttack(); // attack 상태인데 애니메이션이 작동하지 않으면 애니메이션을 작동시킴
+				}
+				break;
+			default:
+				break;
+		}
 	}
 }
