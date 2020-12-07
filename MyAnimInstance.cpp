@@ -6,29 +6,30 @@
 UMyAnimInstance::UMyAnimInstance() {
 	bIsAttack = false;
 
-	ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE(TEXT("AnimMontage'/Game/Animation_BP/AttackMontage.AttackMontage'"));
+	ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE(TEXT("AnimMontage'/Game/BluePrint/AttackMontage.AttackMontage'"));
 	
 	if (ATTACK_MONTAGE.Succeeded()) {
 		attackMontage = ATTACK_MONTAGE.Object;
 	}
 
-	ConstructorHelpers::FObjectFinder<UAnimMontage> RUN_MONTAGE(TEXT("AnimMontage'/Game/Animation_BP/RunMontage.RunMontage'"));
+	ConstructorHelpers::FObjectFinder<UAnimMontage> RUN_MONTAGE(TEXT("AnimMontage'/Game/BluePrint/RunMontage.RunMontage'"));
 
 	if (RUN_MONTAGE.Succeeded()) {
 		runMontage = RUN_MONTAGE.Object;
 	}
 
-	ConstructorHelpers::FObjectFinder<UAnimMontage> IDLE_MONTAGE(TEXT("AnimMontage'/Game/Animation_BP/IdleMontage.IdleMontage'"));
+	ConstructorHelpers::FObjectFinder<UAnimMontage> IDLE_MONTAGE(TEXT("AnimMontage'/Game/BluePrint/IdleMontage.IdleMontage'"));
 
 	if (IDLE_MONTAGE.Succeeded()) {
 		idleMontage = IDLE_MONTAGE.Object;
 	}
 
-	ConstructorHelpers::FObjectFinder<UAnimMontage> DASH_MONTAGE(TEXT("AnimMontage'/Game/Animation_BP/DashMontage.DashMontage'"));
+	ConstructorHelpers::FObjectFinder<UAnimMontage> DASH_MONTAGE(TEXT("AnimMontage'/Game/BluePrint/DashMontage.DashMontage'"));
 
 	if (DASH_MONTAGE.Succeeded()) {
 		dashMontage = DASH_MONTAGE.Object;
 	}
+
 }
 
 void UMyAnimInstance::NativeBeginPlay() {
@@ -58,3 +59,4 @@ void UMyAnimInstance::Dash() {
 
 	Montage_Play(dashMontage);
 }
+

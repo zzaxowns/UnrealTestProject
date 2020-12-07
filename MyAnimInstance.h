@@ -25,7 +25,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Run();
 
-
 	UFUNCTION(BlueprintCallable)
 	void Idle();
 

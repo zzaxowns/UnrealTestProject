@@ -46,14 +46,21 @@ ATestPlayer::ATestPlayer()
 	//애님 인스턴스를 활용한 애니메이션 부분
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance>BLADER_ANIM(TEXT("AnimBlueprint'/Game/Animation_BP/Shinbi_Animation_BP.Shinbi_Animation_BP_C'"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance>BLADER_ANIM(TEXT("AnimBlueprint'/Game/BluePrint/Shinbi_Animation_BP.Shinbi_Animation_BP_C'"));
 
 	if (BLADER_ANIM.Succeeded()) {
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("BLADER success"));
 		GetMesh()->SetAnimInstanceClass(BLADER_ANIM.Class);
 	}
 
+
+	//=============================================== 변수 ====================================
+	usingMoveForward = false; // Moveforward의 움직임이 있는지 MoveRight에서 확인하는 변수
+	usingAttack = false; // 공격을 하고 있는지 확인하는 변수
+	usingDash = false; // 대쉬를 쓰고 있는지 확인하는 변수
+
 	playerState = idle; // 맨 처음 플레이어의 상태를 idle로 지정
+	comboCount = 0;
 }
 
 // Called when the game starts or when spawned
@@ -92,8 +99,6 @@ void ATestPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	//캐릭터 애니메이션 관련 함수 바인딩
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &ATestPlayer::DoAttack); // 공격 애니메이션 추가
-	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ATestPlayer::DoRun); //이동 애니메이션 추가
-	PlayerInputComponent->BindAction("Run", IE_Released, this, &ATestPlayer::DoIdle); // 이동하지 않을 때의 애니메이션
 
 	//대쉬 관련 함수 연결
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ATestPlayer::DoDash);
@@ -101,43 +106,116 @@ void ATestPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 }
 
 void ATestPlayer::MoveForward(float Value) {
+
 	/*FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
 	AddMovementInput(Direction, Value);*/
 
-	FRotator Rotation = Controller->GetControlRotation();
-	FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-	
-	FVector Direction = FRotationMatrix(YawRotation).GetScaledAxis(EAxis::X);
-	//FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
-	AddMovementInput(Direction, Value);
+	if (playerState != attack) {
+		if (Value == 0) { // 움직일 때의 value 값이 0이면 움직이지 않는다는 것
+			usingMoveForward = false; // 전진 함수가 활동 안함
+			playerState = idle;
+		}
+		else { //그 이외이면 움직인다는 것 playerState가 run 상태 인것.
+			usingMoveForward = true; // 전진 함수가 활동 중임 
+
+			if (playerState != run && playerState != dash) { // 상태가 run또는 dash가 아니라면 run을 넣어달라 
+				playerState = run;
+			}
+
+			FRotator Rotation = Controller->GetControlRotation();
+			FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+
+			FVector Direction = FRotationMatrix(YawRotation).GetScaledAxis(EAxis::X);
+			//FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
+
+			if (playerState == dash) { // 대쉬일 경우에 1.5배 속으로 대쉬를 하게 하고
+				AddMovementInput(Direction, 2.0 *Value);
+			}
+			else { // 대쉬가 아니다, 즉 일반 이동일 경우에 일반 이동 수치만큼 이동한다.
+				AddMovementInput(Direction, Value);
+			}
+		}
+	}
+	else if (playerState == attack) { // 공격 상태일 때의 이동
+
+		usingMoveForward = true; // 전진 함수가 활동 중임 
+
+		FRotator Rotation = Controller->GetControlRotation();
+		FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+
+		FVector Direction = FRotationMatrix(YawRotation).GetScaledAxis(EAxis::X);
+
+		AddMovementInput(Direction, 0.2 *Value);
+	}
 }
 
 void ATestPlayer::MoveRight(float Value) {
 
-	FRotator Rotation = Controller->GetControlRotation();
-	FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-	
-	FVector Direction = FRotationMatrix(YawRotation).GetScaledAxis(EAxis::Y);
-	//FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
-	AddMovementInput(Direction, Value);
+	if (playerState != attack) {
+		if (Value == 0 && !usingMoveForward) { // 움직이지 않는 경우
+			playerState = idle;
+		}
+		else { // 움직이는 경우 
 
+			if (playerState != run && playerState != dash) { // 상태가 run또는 dash가 아니라면 run을 넣어달라
+				playerState = run;
+			}
+
+			FRotator Rotation = Controller->GetControlRotation();
+			FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+
+			FVector Direction = FRotationMatrix(YawRotation).GetScaledAxis(EAxis::Y);
+			//FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
+
+			if (playerState == dash) { // 대쉬일 경우에 1.5배 속으로 대쉬를 하게 하고
+				AddMovementInput(Direction, 1.5 *Value);
+			}
+			else { // 대쉬가 아니다, 즉 일반 이동일 경우에 일반 이동 수치만큼 이동한다.
+				AddMovementInput(Direction, Value);
+			}
+		}
+	}
 }
 
 void ATestPlayer::DoAttack()
 {
-	if (playerState != attack) { playerState = attack; }
+	if (playerState != attack && !usingAttack ) {
+		playerState = attack; 
 	
-	if (myAnimInst != nullptr) {
-		myAnimInst->Attack();
+		if (myAnimInst != nullptr) {
+			usingAttack = true;
+			myAnimInst->Attack();
+		}
+
 	}
+	else if (playerState == attack && usingAttack && comboCount <2) { //콤보 0->1->2 따라서 2가 마지막 공격임
+		comboCount++;
+
+		if (myAnimInst != nullptr) {
+			usingAttack = true;
+			myAnimInst->Attack();
+		}
+
+		myAnimInst->Montage_JumpToSection(FName(comboList[comboCount]),myAnimInst->attackMontage);
+	}
+
 }
 
 void ATestPlayer::DoRun() {
-	if (playerState != run) { playerState = run; }
+	if (playerState != run) {
+		playerState = run; 
 
-	if (myAnimInst != nullptr) {
-		myAnimInst->Run();
+		if (myAnimInst != nullptr) {
+			myAnimInst->Run();
+		}
+
 	}
+	else if (playerState == run && !(myAnimInst->Montage_IsPlaying(myAnimInst->runMontage))) {
+		if (myAnimInst != nullptr) {
+			myAnimInst->Run();
+		}
+	}
+
 }
 
 void ATestPlayer::DoIdle() {
@@ -149,10 +227,13 @@ void ATestPlayer::DoIdle() {
 }
 
 void ATestPlayer::DoDash(){
-	if (playerState != dash) { playerState = dash; }
+	if (playerState != attack && playerState != idle && !usingDash) { // 공격중에는 대쉬를 사용하지 못함
+		if (playerState != dash) { playerState = dash; }
 
-	if (myAnimInst != nullptr) {
-		myAnimInst->Dash();
+		if (myAnimInst != nullptr) {
+			usingDash = true; // 대쉬를 하고 있다는 변수를 true
+			myAnimInst->Dash(); // 대쉬 애니메이션을 사용
+		}
 	}
 }
 
@@ -162,23 +243,35 @@ void ATestPlayer::playerAnimation()
 
 		switch (playerState) {
 			case idle:
-				if (playerState == idle && !(myAnimInst->Montage_IsPlaying(myAnimInst->idleMontage))) {
+				if (usingDash && !(myAnimInst->Montage_IsPlaying(myAnimInst->dashMontage))) {
+					// 대쉬를 사용했다는 변수가 true이고 대쉬 애니메이션이 작동하지 않고 있다 = 대쉬가 끝났다.
+					usingDash = false; // 대쉬 변수를 false 로 해줌 
+					playerState = idle; // 대쉬가 끝나면 Idle로 상태를 초기화 해줌
+				}else if (playerState == idle && !(myAnimInst->Montage_IsPlaying(myAnimInst->idleMontage))) {
 					DoIdle(); // idle 상태인데 애니메이션이 작동하지 않으면 애니메이션을 작동시킴
 				}
 				break;
 			case run:
 				if (playerState == run && !(myAnimInst->Montage_IsPlaying(myAnimInst->runMontage))) {
-					DoRun(); // run 상태인데 애니메이션이 작동하지 않으면 애니메이션을 작동시킴
+					if (myAnimInst != nullptr) { // 이동 상태인데 이동 애니메이션을 안쓰고 있으면
+						myAnimInst->Run();       // 이동 애니메이션을 불러온다 
+					}
 				}
 				break;
 			case dash:
-				if (playerState == dash && !(myAnimInst->Montage_IsPlaying(myAnimInst->dashMontage))) {
-					DoDash(); // dash 상태인데 애니메이션이 작동하지 않으면 애니메이션을 작동시킴
-				}
+				if (usingDash && !(myAnimInst->Montage_IsPlaying(myAnimInst->dashMontage))) {
+					// 대쉬를 사용했다는 변수가 true이고 대쉬 애니메이션이 작동하지 않고 있다 = 대쉬가 끝났다.
+					usingDash = false; // 대쉬 변수를 false 로 해줌 
+					playerState = idle; // 대쉬가 끝나면 Idle로 상태를 초기화 해줌
+				} 
 				break;
 			case attack:
-				if (playerState == attack && !(myAnimInst->Montage_IsPlaying(myAnimInst->attackMontage))) {
-					DoAttack(); // attack 상태인데 애니메이션이 작동하지 않으면 애니메이션을 작동시킴
+				if (usingAttack && !(myAnimInst->Montage_IsPlaying(myAnimInst->attackMontage))) {
+					// 공격 사용 변수가 true이고 현재 공격 애니메이션을 쓰지 않는다 = 공격이 끝났다.
+					usingAttack = false; // 공격 사용 변수 false
+					comboCount = 0;
+					playerState = idle; // idle 애니메이션으로 변경
+				
 				}
 				break;
 			default:
@@ -186,3 +279,8 @@ void ATestPlayer::playerAnimation()
 		}
 	}
 }
+
+//void ATestPlayer::EndAttacking()
+//{
+//	usingAttack = false;
+//}

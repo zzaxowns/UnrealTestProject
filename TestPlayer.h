@@ -37,12 +37,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent * Arm; // Ä«¸Þ¶ó¿¡ ´Þ¸° ºÀ(¼¿Ä«ºÀÀ» »ý°¢ÇÏÀÚ)
 
+	bool usingMoveForward;
+	bool usingAttack;
+	bool usingDash;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	UAnimInstance* animInstance;
 	virtual void PostInitilizeComponent();
 	UMyAnimInstance* myAnimInst;
+
+	const char* comboList[3] = { "Attack1" , "Attack2", "Attack3" };
+	int comboCount;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -74,4 +81,7 @@ public:
 
 	UFUNCTION()
 		void playerAnimation();
+
+	//UFUNCTION(BlueprintCallable)
+	//void EndAttacking();
 };

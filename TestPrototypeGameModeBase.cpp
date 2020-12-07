@@ -7,3 +7,7 @@
 ATestPrototypeGameModeBase::ATestPrototypeGameModeBase() {
 	DefaultPawnClass = ATestPlayer::StaticClass();
 }
+
+void ATestPrototypeGameModeBase::BeginPlay() {
+
+}
