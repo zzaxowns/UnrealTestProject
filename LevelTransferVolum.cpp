@@ -35,7 +35,7 @@ void ALevelTransferVolum::NotifyActorBeginOverlap(AActor * OtherActor)
 
 	if (Pawn != nullptr)
 	{
-		UGameplayStatics::OpenLevel(this, "HuntingGround");
+		UGameplayStatics::OpenLevel(this, "HuntGround");
 	}
 }
 
