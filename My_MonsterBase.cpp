@@ -4,14 +4,11 @@
 #include "My_MonsterBase.h"
 
 // Sets default values
-AMy_MonsterBase::AMy_MonsterBase(int m_Monster_Type, int m_Hp, int m_Offense_Power)
+AMy_MonsterBase::AMy_MonsterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	this->m_Monster_Type = m_Monster_Type;
-	this->m_Hp = m_Hp;
-	this->m_Offense_Power = m_Offense_Power;
 }
 
 // Called when the game starts or when spawned
@@ -35,3 +32,11 @@ void AMy_MonsterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
+void AMy_MonsterBase::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+
+}
+
+void AMy_MonsterBase::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
+
+}
