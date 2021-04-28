@@ -9,6 +9,9 @@ AMy_MonsterBase::AMy_MonsterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	hitSphere = CreateDefaultSubobject<USphereComponent>(TEXT("HITSPHERE"));
+	hitSphere->InitSphereRadius(75.0f);
+
 }
 
 // Called when the game starts or when spawned

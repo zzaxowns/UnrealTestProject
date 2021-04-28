@@ -5,11 +5,12 @@
 #include "MyTrainingDummy.h"
 
 UMyTrainingDummy_AnimInstance::UMyTrainingDummy_AnimInstance() {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> DEATHMONTAGE(
-		TEXT("AnimMontage'/Game/_My/MyTrainingDummy_Death_Montage.MyTrainingDummy_Death_Montage'"));
-	if (DEATHMONTAGE.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> HITMONTAGE(
+		TEXT("AnimMontage'/Game/_My/MyTrainingDummy_HIt_Montage.MyTrainingDummy_Hit_Montage'"));
+
+	if (HITMONTAGE.Succeeded())
 	{
-		deathMontage = DEATHMONTAGE.Object;
+		hitMontage = HITMONTAGE.Object;
 	}
 
 	isHit = false;
@@ -25,7 +26,7 @@ void UMyTrainingDummy_AnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (!::IsValid(pawn)) { return; }
 
 	isHit = pawn->getIshit();
-
+	
 }
 
 void UMyTrainingDummy_AnimInstance::AnimNotify_ResetHit()
@@ -42,8 +43,8 @@ void UMyTrainingDummy_AnimInstance::NativeBeginPlay()
 
 }
 
-void UMyTrainingDummy_AnimInstance::playDeathMontage()
+void UMyTrainingDummy_AnimInstance::playhitMontage()
 {
-	Montage_Play(deathMontage);
+	Montage_Play(hitMontage);
 }
 

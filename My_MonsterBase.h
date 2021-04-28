@@ -35,7 +35,7 @@ public:
 	UFUNCTION() // ³ª°¬À» ¶§
 		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	USphereComponent hitSphere;
+	USphereComponent *hitSphere;
 
 
 };

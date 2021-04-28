@@ -82,6 +82,7 @@ void AMyTrainingDummy::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AAct
 			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("collison"));
 			lenghOfCanHit = true;
 			isHit = true;
+			//myTrainingDummyAnim->playhitMontage();
 		}
 	}
 }
