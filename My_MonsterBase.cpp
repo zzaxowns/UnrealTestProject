@@ -10,8 +10,9 @@ AMy_MonsterBase::AMy_MonsterBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	hitSphere = CreateDefaultSubobject<USphereComponent>(TEXT("HITSPHERE"));
-	hitSphere->InitSphereRadius(75.0f);
+	hitSphere->InitSphereRadius(200.0f);
 
+	m_HP = 3;
 }
 
 // Called when the game starts or when spawned
