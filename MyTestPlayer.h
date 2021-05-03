@@ -63,6 +63,8 @@ public:
 	UFUNCTION()
 	void RecoverST(float DeltaTime);
 
+	UFUNCTION()
+	void Damaged();
 protected:
 
 	// Called to bind functionality to input

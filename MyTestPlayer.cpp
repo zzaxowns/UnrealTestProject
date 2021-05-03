@@ -88,6 +88,11 @@ void AMyTestPlayer::RecoverST(float DeltaTime)
 	}
 }
 
+void AMyTestPlayer::Damaged()
+{
+	playerHp -= 0.3;
+}
+
 // Called to bind functionality to input
 void AMyTestPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
