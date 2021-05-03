@@ -16,6 +16,7 @@ public:
 	AMy_MonsterBase();
 
 	float m_HP; //몬스터 HP
+	bool canShootRange; // 공격 거리에 들어왔는지 확인 
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,5 +38,5 @@ public:
 
 	USphereComponent *hitSphere;
 
-
+	void Damaged(); // 데미지 입을 때 호출하는 함수 
 };
