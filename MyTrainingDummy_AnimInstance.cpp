@@ -26,7 +26,7 @@ void UMyTrainingDummy_AnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (!::IsValid(pawn)) { return; }
 
 	isHit = pawn->getIshit();
-	
+	playhitMontage();
 }
 
 void UMyTrainingDummy_AnimInstance::AnimNotify_ResetHit()
