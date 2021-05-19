@@ -29,8 +29,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float playerStamina;
 
-	bool getUsingAttack();
-
+	bool isCombo;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -65,6 +64,12 @@ public:
 
 	UFUNCTION()
 	void Damaged();
+
+	UFUNCTION()
+	void setUsingAttack(bool usingAttack);
+
+	UFUNCTION()
+	bool getUsingAttack();
 protected:
 
 	// Called to bind functionality to input

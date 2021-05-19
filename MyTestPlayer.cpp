@@ -44,6 +44,7 @@ AMyTestPlayer::AMyTestPlayer()
 	usingMoveForward = false; // Moveforward의 움직임이 있는지 MoveRight에서 확인하는 변수
 	usingAttack = false; // 공격을 하고 있는지 확인하는 변수
 	usingDash = false; // 대쉬를 쓰고 있는지 확인하는 변수
+	isCombo = false;
 
 	playerState = idle; // 맨 처음 플레이어의 상태를 idle로 지정
 	comboCount = 0;
@@ -91,6 +92,11 @@ void AMyTestPlayer::RecoverST(float DeltaTime)
 void AMyTestPlayer::Damaged()
 {
 	playerHp -= 0.3;
+}
+
+void AMyTestPlayer::setUsingAttack(bool usingAttack)
+{
+	this->usingAttack = usingAttack;
 }
 
 // Called to bind functionality to input
@@ -193,20 +199,21 @@ void AMyTestPlayer::DoAttack()
 {
 	if (playerState != attack && !usingAttack) {
 		playerState = attack;
+		isCombo = true;
 
 		if (myTestPlayerAnimInst != nullptr) {
-			usingAttack = true;
+			//usingAttack = true;
 			myTestPlayerAnimInst->Attack();
 			playerStamina -= 0.1;// 스테미나 사용
 			recoverStaminaDelay = 2.0f;//스테미나 리커버리 시간 초기화
 		}
 
 	}
-	else if (playerState == attack && usingAttack && comboCount < 2) { //콤보 0->1->2 따라서 2가 마지막 공격임
+	else if (isCombo && playerState == attack && comboCount < 2) { //콤보 0->1->2 따라서 2가 마지막 공격임
 		comboCount++;
 
 		if (myTestPlayerAnimInst != nullptr) {
-			usingAttack = true;
+			//usingAttack = true;
 			myTestPlayerAnimInst->Attack();
 			playerStamina -= 0.1; // 스테미나 사용
 			recoverStaminaDelay = 2.0f; //스테미나 리커버리 시간 초기화
@@ -276,9 +283,10 @@ void AMyTestPlayer::playerAnimation()
 			}
 			break;
 		case attack:
-			if (usingAttack && !(myTestPlayerAnimInst->Montage_IsPlaying(myTestPlayerAnimInst->attackMontage))) {
+			if (isCombo && !(myTestPlayerAnimInst->Montage_IsPlaying(myTestPlayerAnimInst->attackMontage))) {
 				// 공격 사용 변수가 true이고 현재 공격 애니메이션을 쓰지 않는다 = 공격이 끝났다.
-				usingAttack = false; // 공격 사용 변수 false
+				//usingAttack = false; // 공격 사용 변수 false
+				isCombo = false;
 				comboCount = 0;
 				playerState = idle; // idle 애니메이션으로 변경
 
