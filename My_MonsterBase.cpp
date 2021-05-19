@@ -15,6 +15,8 @@ AMy_MonsterBase::AMy_MonsterBase()
 
 	m_HP = 3;
 	canShootRange = false; // 슈팅 레인지에 들어왔는지 아닌지 확인하는 변수 
+	monsterState = idle;
+
 }
 
 // Called when the game starts or when spawned

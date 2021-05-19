@@ -15,8 +15,17 @@ public:
 	// Sets default values for this character's properties
 	AMy_MonsterBase();
 
+	enum MonsterState { // 플레이어의 상태를 표시하는 자료형
+		idle,
+		walk,
+		attack,
+		death
+	};
+
 	float m_HP; //몬스터 HP
 	bool canShootRange; // 공격 거리에 들어왔는지 확인 
+
+	MonsterState monsterState;
 
 protected:
 	// Called when the game starts or when spawned
