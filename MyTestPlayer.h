@@ -70,6 +70,12 @@ public:
 
 	UFUNCTION()
 	bool getUsingAttack();
+
+	UPROPERTY(EditDefaultsOnly, Category = "MyFX")
+	UParticleSystem* HitFx;
+
+
+	void ShowFX();
 protected:
 
 	// Called to bind functionality to input
@@ -97,5 +103,5 @@ protected:
 
 	UFUNCTION()
 	void playerAnimation();
-
+	
 };

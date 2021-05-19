@@ -10,8 +10,9 @@ void UMyTestAnimationNotiftState::NotifyBegin(USkeletalMeshComponent* MeshComp, 
 	AMyTestPlayer *player = Cast<AMyTestPlayer>(MeshComp->GetOwner());
 
 	if (player != NULL) {//플레이어가 있으면 
-		player->setUsingAttack(true);
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, __FUNCTION__);
+		player->setUsingAttack(true);
+		player->ShowFX();
 	}
 }
 

@@ -40,6 +40,10 @@ AMyTestPlayer::AMyTestPlayer()
 		GetMesh()->SetAnimInstanceClass(PLATER_ANIM.Class);
 	}
 
+	//파티클 관련 변수 저장하기
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>ParticleAsset(TEXT("ParticleSystem'/Game/ParagonShinbi/FX/Particles/Abilities/Primary/FX/P_Mudang_Primary_Impact.P_Mudang_Primary_Impact'"));
+	HitFx = ParticleAsset.Object;
+
 	//=============================================== 변수 ====================================
 	usingMoveForward = false; // Moveforward의 움직임이 있는지 MoveRight에서 확인하는 변수
 	usingAttack = false; // 공격을 하고 있는지 확인하는 변수
@@ -52,6 +56,8 @@ AMyTestPlayer::AMyTestPlayer()
 	playerHp = 1.0f;
 	playerStamina = 1.0f;
 	recoverStaminaDelay = 2.0f;
+
+
 }
 
 // Called when the game starts or when spawned
@@ -97,6 +103,11 @@ void AMyTestPlayer::Damaged()
 void AMyTestPlayer::setUsingAttack(bool usingAttack)
 {
 	this->usingAttack = usingAttack;
+}
+
+void AMyTestPlayer::ShowFX()
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFx, GetActorLocation());
 }
 
 // Called to bind functionality to input
