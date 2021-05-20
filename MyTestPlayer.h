@@ -29,6 +29,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float playerStamina;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FVector particlePos;
+
+
 	bool isCombo;
 protected:
 	// Called when the game starts or when spawned
@@ -73,7 +77,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "MyFX")
 	UParticleSystem* HitFx;
-
 
 	void ShowFX();
 protected:

@@ -53,11 +53,11 @@ AMyTestPlayer::AMyTestPlayer()
 	playerState = idle; // 맨 처음 플레이어의 상태를 idle로 지정
 	comboCount = 0;
 
+
+
 	playerHp = 1.0f;
 	playerStamina = 1.0f;
 	recoverStaminaDelay = 2.0f;
-
-
 }
 
 // Called when the game starts or when spawned
