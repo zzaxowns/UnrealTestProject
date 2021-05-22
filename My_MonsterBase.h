@@ -15,6 +15,12 @@ public:
 	// Sets default values for this character's properties
 	AMy_MonsterBase();
 
+	UPROPERTY(EditAnywhere, Category = Behavior)
+		class UBehaviorTree* BotBehavior;
+
+	UPROPERTY(EditAnywhere, Category = Behavior)
+		UAnimMontage *Attack_Melee;
+
 	enum MonsterState { // 플레이어의 상태를 표시하는 자료형
 		idle,
 		walk,
@@ -37,6 +43,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
 
 	UFUNCTION() // 충돌 체크(들어왔을 때)
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,

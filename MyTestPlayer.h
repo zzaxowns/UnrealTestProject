@@ -5,6 +5,7 @@
 #include"MyTestPlayerAnimInstance.h"
 #include "EngineMinimal.h"
 #include "BasicCharacter.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "MyTestPlayer.generated.h"
 
 
@@ -107,4 +108,8 @@ protected:
 	UFUNCTION()
 	void playerAnimation();
 	
+private:
+
+	class UAIPerceptionStimuliSourceComponent* stimulus;
+	void setup_stimulus();
 };

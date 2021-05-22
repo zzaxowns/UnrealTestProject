@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "MyTestAIController.generated.h"
 
 /**
@@ -14,42 +15,33 @@ class UBehaviorTreeComponent;
 
 class UBlackboardComponent;
 
-UCLASS(config = Game)
+UCLASS()
 class TESTPROJECT_API AMyTestAIController : public AAIController
 {
 	GENERATED_BODY()
 	
 public:
-	AMyTestAIController();
+	AMyTestAIController(FObjectInitializer const& object_initalizer = FObjectInitializer::Get());
 
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* Pawn) override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual FRotator GetControlRotation() const override;
 
-	UFUNCTION()
-	void OnPawnDetected(const TArray<AActor*> &DetectedPawns);
+	UFUNCTION(BlueprintCallable, Category = Behavior)
+		void on_target_detected(AActor* actor, FAIStimulus const stimulus);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	float AISightRadius = 500.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	float AISightAge = 5.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	float AILoseSightRadius = AISightRadius + 50.0f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	float AIFieldOfView = 90.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	class UAISenseConfig_Sight* SightConfig;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	bool bIsPlayerDetected = false;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-		float DistanceToPlayer = 0.0f;
+	class UBlackboardComponent* get_blackboard() const;
 
 private:
-	UPROPERTY(transient)
-		UBlackboardComponent* BlackboardComp;
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+		class UBehaviorTreeComponent* behavior_tree_Comp;
 
-	UPROPERTY(transient)
-		UBehaviorTreeComponent* BehaviorComp;
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+		class UBehaviorTree* btree;
+
+	class UBlackboardComponent* blackboard;
+	class UAISenseConfig_Sight* sight_config;
+
+	void setup_perception_system();
 };

@@ -2,6 +2,8 @@
 
 
 #include "MyTestPlayer.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
 
 // Sets default values
 AMyTestPlayer::AMyTestPlayer()
@@ -58,6 +60,9 @@ AMyTestPlayer::AMyTestPlayer()
 	playerHp = 1.0f;
 	playerStamina = 1.0f;
 	recoverStaminaDelay = 2.0f;
+
+
+	setup_stimulus();
 }
 
 // Called when the game starts or when spawned
@@ -312,4 +317,10 @@ void AMyTestPlayer::playerAnimation()
 bool AMyTestPlayer::getUsingAttack()
 {
 	return usingAttack;
+}
+
+void AMyTestPlayer::setup_stimulus(){
+	stimulus = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("stimulus"));
+	stimulus->RegisterForSense(TSubclassOf<UAISense_Sight>());
+	stimulus->RegisterWithPerceptionSystem();
 }

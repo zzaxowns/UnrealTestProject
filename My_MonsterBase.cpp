@@ -3,6 +3,7 @@
 
 #include "My_MonsterBase.h"
 #include "MyTestPlayer.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AMy_MonsterBase::AMy_MonsterBase()
@@ -11,11 +12,15 @@ AMy_MonsterBase::AMy_MonsterBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	hitSphere = CreateDefaultSubobject<USphereComponent>(TEXT("HITSPHERE"));
-	hitSphere->InitSphereRadius(200.0f);
+	hitSphere->InitSphereRadius(50.0f);
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	m_HP = 3;
 	canShootRange = false; // 슈팅 레인지에 들어왔는지 아닌지 확인하는 변수 
 	monsterState = idle;
+
+	
 
 }
 
@@ -48,9 +53,8 @@ void AMy_MonsterBase::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, 
 		auto player = Cast<AMyTestPlayer>(OtherActor);
 		if (!player) return;
 
-		if (OtherActor->IsA(AMyTestPlayer::StaticClass()) && player->getUsingAttack()) {
-			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("collison"));
-			canShootRange = false; // 공격 범위 안에 들어오면 공격 가능 변수 true
+		if (OtherActor->IsA(AMyTestPlayer::StaticClass())) {
+			UE_LOG(LogTemp, Warning, TEXT("Attack Player"));
 		}
 	}
 
