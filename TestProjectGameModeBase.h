@@ -9,6 +9,15 @@
 /**
  * 
  */
+
+UENUM(BlueprintType)
+enum class EGameState :uint8 {
+	GameStart,
+	GamePlay,
+	GamePause,
+	GameOver,
+};
+
 UCLASS()
 class TESTPROJECT_API ATestProjectGameModeBase : public AGameModeBase
 {
@@ -16,11 +25,24 @@ class TESTPROJECT_API ATestProjectGameModeBase : public AGameModeBase
 	
 
 protected:
+	ATestProjectGameModeBase();
+
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "UMG Game")
+	/*UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "UMG Game")
 	UUserWidget* CurrentWidget;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "UMG Game")
-	TSubclassOf<UUserWidget> HUDWidget;
+	TSubclassOf<UUserWidget> HUDWidget;*/
+
+	UPROPERTY(EditAnywhere, Category = "UMG Game")
+		EGameState gameStateEnum;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMG Game")
+		TSubclassOf<UUserWidget>HUDWidgetClass;
+
+	UUserWidget* CurrentWidget;
+
+public:
+	void ChangeUI();
 };

@@ -23,5 +23,5 @@ protected:
 		bool search_random = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search", meta = (AllowProtectedAccess = "true"))
-		bool search_radius = 150.0f;
+		float search_radius = 150.0f;
 };
