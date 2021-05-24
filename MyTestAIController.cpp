@@ -65,7 +65,7 @@ FRotator AMyTestAIController::GetControlRotation() const
 
 void AMyTestAIController::on_target_detected(AActor* actor, FAIStimulus const stimulus) {
 	if (auto const ch = Cast<AMyTestPlayer>(actor)) {
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Find Player!!!");
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Find Player!!!");
 		get_blackboard()->SetValueAsBool(bb_keys::can_see_player, stimulus.WasSuccessfullySensed());
 	}
 }

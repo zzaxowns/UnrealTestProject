@@ -6,6 +6,7 @@
 #include "EngineMinimal.h"
 #include "BasicCharacter.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Components/AudioComponent.h"
 #include "MyTestPlayer.generated.h"
 
 
@@ -47,6 +48,14 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class USpringArmComponent * Arm; // 카메라에 달린 봉(셀카봉을 생각하자)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Audio")
+		class USoundCue* AttackSoundCue;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Audio")
+		class UAudioComponent* AttackAudioComponent;
+
+
 
 	UAnimInstance* animInstance;
 	//virtual void PostInitilizeComponent();

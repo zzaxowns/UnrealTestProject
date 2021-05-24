@@ -6,22 +6,22 @@
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 
 AStartMenu_HUD::AStartMenu_HUD() {
-	//static ConstructorHelpers::FClassFinder<UUserWidget>ui(TEXT("/Game/_My/UI/StartMenu_BP"));
+	static ConstructorHelpers::FClassFinder<UUserWidget>ui(TEXT("/Game/_My/HUD/StartMenu_BP"));
 
-	//if (ui.Succeeded()) {
-	//	uiBPClass = ui.Class;
-	//}
+	if (ui.Succeeded()) {
+		uiBPClass = ui.Class;
+	}
 }
 
 void AStartMenu_HUD::BeginPlay()
 {
-	//Super::BeginPlay();
+	Super::BeginPlay();
 
-	//if (uiBPClass) {
-	//	uiWidget = CreateWidget<UUserWidget>(GetWorld(), uiBPClass);
+	if (uiBPClass) {
+		uiWidget = CreateWidget<UUserWidget>(GetWorld(), uiBPClass);
 
-	//	if (uiBPClass) { 
-	//		uiWidget->AddToViewport();
-	//	}
-	//}
+		if (uiBPClass) { 
+			uiWidget->AddToViewport();
+		}
+	}
 }

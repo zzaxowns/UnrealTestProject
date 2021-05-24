@@ -4,6 +4,7 @@
 #include "MyTestPlayer.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 AMyTestPlayer::AMyTestPlayer()
@@ -46,6 +47,15 @@ AMyTestPlayer::AMyTestPlayer()
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>ParticleAsset(TEXT("ParticleSystem'/Game/ParagonShinbi/FX/Particles/Abilities/Primary/FX/P_Mudang_Primary_Impact.P_Mudang_Primary_Impact'"));
 	HitFx = ParticleAsset.Object;
 
+	static ConstructorHelpers::FObjectFinder<USoundCue>Attack(TEXT("SoundCue'/Game/ParagonShinbi/Characters/Heroes/Shinbi/Sounds/SoundCues/Shinbi_Effort_Attack.Shinbi_Effort_Attack'"));
+
+	if (Attack.Succeeded()) {
+		AttackSoundCue = Attack.Object;
+		AttackAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AttackAudioComponent"));
+		AttackAudioComponent->SetupAttachment(RootComponent);
+	}
+
+
 	//=============================================== 변수 ====================================
 	usingMoveForward = false; // Moveforward의 움직임이 있는지 MoveRight에서 확인하는 변수
 	usingAttack = false; // 공격을 하고 있는지 확인하는 변수
@@ -73,6 +83,11 @@ void AMyTestPlayer::BeginPlay()
 	animInstance = GetMesh()->GetAnimInstance();
 
 	myTestPlayerAnimInst = Cast<UMyTestPlayerAnimInstance>(animInstance);
+
+	if (AttackAudioComponent && AttackSoundCue) // 사운드 발생
+	{
+		AttackAudioComponent->SetSound(AttackSoundCue);
+	}
 
 }
 
@@ -220,6 +235,12 @@ void AMyTestPlayer::DoAttack()
 		if (myTestPlayerAnimInst != nullptr) {
 			//usingAttack = true;
 			myTestPlayerAnimInst->Attack();
+
+			if (AttackAudioComponent && AttackSoundCue) // 사운드 발생
+			{
+				AttackAudioComponent->Play(0.0f);
+			}
+
 			playerStamina -= 0.1;// 스테미나 사용
 			recoverStaminaDelay = 2.0f;//스테미나 리커버리 시간 초기화
 		}
@@ -231,6 +252,12 @@ void AMyTestPlayer::DoAttack()
 		if (myTestPlayerAnimInst != nullptr) {
 			//usingAttack = true;
 			myTestPlayerAnimInst->Attack();
+
+			if (AttackAudioComponent && AttackSoundCue) // 사운드 발생
+			{
+				AttackAudioComponent->Play(0.0f);
+			}
+
 			playerStamina -= 0.1; // 스테미나 사용
 			recoverStaminaDelay = 2.0f; //스테미나 리커버리 시간 초기화
 		}

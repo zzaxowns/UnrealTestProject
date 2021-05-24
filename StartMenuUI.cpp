@@ -15,7 +15,7 @@ void UStartMenuUI::NativeConstruct() {
 }
 
 void UStartMenuUI::Btn_StartGame_Clicked(){
-	UGameplayStatics::OpenLevel(GetWorld(), "Game/LEVEL/MyTestMap_01");
+	UGameplayStatics::OpenLevel(GetWorld(), "/Game/LEVEL/MyTestMap_01");
 }
 
 
