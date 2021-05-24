@@ -228,43 +228,44 @@ void AMyTestPlayer::DoIdle()
 
 void AMyTestPlayer::DoAttack()
 {
-	if (playerState != attack && !usingAttack) {
-		playerState = attack;
-		isCombo = true;
+	if (playerStamina > 0) {
+		if (playerState != attack && !usingAttack) {
+			playerState = attack;
+			isCombo = true;
 
-		if (myTestPlayerAnimInst != nullptr) {
-			//usingAttack = true;
-			myTestPlayerAnimInst->Attack();
+			if (myTestPlayerAnimInst != nullptr) {
+				//usingAttack = true;
+				myTestPlayerAnimInst->Attack();
 
-			if (AttackAudioComponent && AttackSoundCue) // 사운드 발생
-			{
-				AttackAudioComponent->Play(0.0f);
+				if (AttackAudioComponent && AttackSoundCue) // 사운드 발생
+				{
+					AttackAudioComponent->Play(0.0f);
+				}
+
+				playerStamina -= 0.1;// 스테미나 사용
+				recoverStaminaDelay = 2.0f;//스테미나 리커버리 시간 초기화
 			}
 
-			playerStamina -= 0.1;// 스테미나 사용
-			recoverStaminaDelay = 2.0f;//스테미나 리커버리 시간 초기화
 		}
+		else if (isCombo && playerState == attack && comboCount < 2) { //콤보 0->1->2 따라서 2가 마지막 공격임
+			comboCount++;
 
-	}
-	else if (isCombo && playerState == attack && comboCount < 2) { //콤보 0->1->2 따라서 2가 마지막 공격임
-		comboCount++;
+			if (myTestPlayerAnimInst != nullptr) {
+				//usingAttack = true;
+				myTestPlayerAnimInst->Attack();
 
-		if (myTestPlayerAnimInst != nullptr) {
-			//usingAttack = true;
-			myTestPlayerAnimInst->Attack();
+				if (AttackAudioComponent && AttackSoundCue) // 사운드 발생
+				{
+					AttackAudioComponent->Play(0.0f);
+				}
 
-			if (AttackAudioComponent && AttackSoundCue) // 사운드 발생
-			{
-				AttackAudioComponent->Play(0.0f);
+				playerStamina -= 0.1; // 스테미나 사용
+				recoverStaminaDelay = 2.0f; //스테미나 리커버리 시간 초기화
 			}
 
-			playerStamina -= 0.1; // 스테미나 사용
-			recoverStaminaDelay = 2.0f; //스테미나 리커버리 시간 초기화
+			myTestPlayerAnimInst->Montage_JumpToSection(FName(comboList[comboCount]), myTestPlayerAnimInst->attackMontage);
 		}
-
-		myTestPlayerAnimInst->Montage_JumpToSection(FName(comboList[comboCount]), myTestPlayerAnimInst->attackMontage);
 	}
-
 }
 
 void AMyTestPlayer::DoRun()

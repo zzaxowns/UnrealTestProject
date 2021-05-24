@@ -4,8 +4,8 @@
 
 #include "EngineMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Components/AudioComponent.h"
 #include "TestProjectGameModeBase.generated.h"
-
 /**
  * 
  */
@@ -42,6 +42,13 @@ protected:
 		TSubclassOf<UUserWidget>HUDWidgetClass;
 
 	UUserWidget* CurrentWidget;
+
+
+	UPROPERTY(BlueprintReadOnly, Category = "Audio")
+		class USoundCue* BGMSoundCue;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Audio")
+		class UAudioComponent* BGMAudioComponent;
 
 public:
 	void ChangeUI();
