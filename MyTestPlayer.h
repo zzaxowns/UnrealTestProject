@@ -7,6 +7,9 @@
 #include "BasicCharacter.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Components/AudioComponent.h"
+#include "CombatInterface.h"
+#include "Animation/AnimMontage.h"
+
 #include "MyTestPlayer.generated.h"
 
 
@@ -89,6 +92,8 @@ public:
 	UParticleSystem* HitFx;
 
 	void ShowFX();
+
+
 protected:
 
 	// Called to bind functionality to input
@@ -117,8 +122,11 @@ protected:
 	UFUNCTION()
 	void playerAnimation();
 	
+
+
 private:
 
 	class UAIPerceptionStimuliSourceComponent* stimulus;
 	void setup_stimulus();
+
 };

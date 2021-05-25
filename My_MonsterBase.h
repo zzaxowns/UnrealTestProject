@@ -4,10 +4,12 @@
 
 #include "EngineMinimal.h"
 #include "GameFramework/Character.h"
+#include "CombatInterface.h"
+#include "Animation/AnimMontage.h"
 #include "My_MonsterBase.generated.h"
 
 UCLASS()
-class TESTPROJECT_API AMy_MonsterBase : public ACharacter
+class TESTPROJECT_API AMy_MonsterBase : public ACharacter,public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -44,8 +46,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
-
 	UFUNCTION() // 충돌 체크(들어왔을 때)
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -56,4 +56,14 @@ public:
 	USphereComponent *hitSphere;
 
 	void Damaged(); // 데미지 입을 때 호출하는 함수 
+
+
+	int melee_attack_Implementation() override;
+
+	UAnimMontage* get_montage() const;
+
+private:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+		UAnimMontage* montage;
 };

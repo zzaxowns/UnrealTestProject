@@ -77,3 +77,18 @@ void AMy_MonsterBase::Damaged()
 {
 	this->m_HP--; //1¾¿ °¨¼Ò
 }
+
+int AMy_MonsterBase::melee_attack_Implementation()
+{
+	if (montage) {
+		PlayAnimMontage(montage);
+	}
+
+	return 0;
+}
+
+UAnimMontage * AMy_MonsterBase::get_montage() const
+{
+	return montage;
+}
+
