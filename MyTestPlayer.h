@@ -26,17 +26,32 @@ public:
 		idle,
 		run,
 		dash,
-		attack
+		attack,
+		hit
 	};
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float playerHp;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float playerStamina;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FVector particlePos;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyState)
+		FName MyCharacterName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyState)
+		float MyMaxHealth;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float MyHealth;
+		
+	//공격 받았을 때 관련 몽타주, 함수 등
+
+	UPROPERTY(EditDefaultsOnly, Category = Pawn)
+		UAnimMontage* hit_Mongtage;
+
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	bool isCombo;
 protected:
@@ -93,6 +108,14 @@ public:
 
 	void ShowFX();
 
+	UPROPERTY(EditDefaultsOnly, Category = "MyFX")
+		UParticleSystem* GetHitFx;
+
+	//float get_Health() const;
+
+	//float get_maxHealth() const;
+
+	//void set_health(float const new_health);
 
 protected:
 
@@ -125,6 +148,8 @@ protected:
 
 
 private:
+
+	//class UWidgetComponent* Widget_Component;
 
 	class UAIPerceptionStimuliSourceComponent* stimulus;
 	void setup_stimulus();

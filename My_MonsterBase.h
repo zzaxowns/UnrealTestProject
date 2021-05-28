@@ -17,11 +17,19 @@ public:
 	// Sets default values for this character's properties
 	AMy_MonsterBase();
 
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyState)
+		class USphereComponent* AttckCollsionSphere;
+
 	UPROPERTY(EditAnywhere, Category = Behavior)
 		class UBehaviorTree* BotBehavior;
 
 	UPROPERTY(EditAnywhere, Category = Behavior)
 		UAnimMontage *Attack_Melee;
+
+	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyState)
+		FName MyCharacterName;*/
 
 	enum MonsterState { // 플레이어의 상태를 표시하는 자료형
 		idle,
@@ -35,6 +43,8 @@ public:
 
 	MonsterState monsterState;
 
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -46,24 +56,20 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION() // 충돌 체크(들어왔을 때)
-	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
+	UFUNCTION()
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION() // 나갔을 때
-	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	USphereComponent *hitSphere;
-
-	void Damaged(); // 데미지 입을 때 호출하는 함수 
-
 
 	int melee_attack_Implementation() override;
 
 	UAnimMontage* get_montage() const;
 
+
 private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 		UAnimMontage* montage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+		UAnimMontage* hitmontage;
 };

@@ -5,6 +5,9 @@
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
 #include "Sound/SoundCue.h"
+#include "Engine.h"
+#include "Components/WidgetComponent.h"
+#include "HPbar.h"
 
 // Sets default values
 AMyTestPlayer::AMyTestPlayer()
@@ -55,7 +58,24 @@ AMyTestPlayer::AMyTestPlayer()
 		AttackAudioComponent->SetupAttachment(RootComponent);
 	}
 
+	//hit 몽타주
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> HITMONTAGE(
+		TEXT("AnimMontage'/Game/_My/MyTestPlayer_hit_Montage.MyTestPlayer_hit_Montage'"));
+
+	if (HITMONTAGE.Succeeded())
+	{
+		hit_Mongtage = HITMONTAGE.Object;
+	}
+
+	//Hp바 위젯
+
+	//if (Widget_Component) {
+	//	Widget_Component->SetupAttachment(RootComponent);
+	//	Widget_Component->SetWidgetSpace(EWidgetSpace::Screen);
+	//	Widget_Component->SetRelativeLocation(FVector(0.0f, 0.0f, 80.f));
+	//}
+	
 	//=============================================== 변수 ====================================
 	usingMoveForward = false; // Moveforward의 움직임이 있는지 MoveRight에서 확인하는 변수
 	usingAttack = false; // 공격을 하고 있는지 확인하는 변수
@@ -67,12 +87,37 @@ AMyTestPlayer::AMyTestPlayer()
 
 
 
-	playerHp = 1.0f;
+	MyHealth = 1.0f;
 	playerStamina = 1.0f;
 	recoverStaminaDelay = 2.0f;
 
 
 	setup_stimulus();
+}
+
+float AMyTestPlayer::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	//playerState = hit;
+	//PlayAnimMontage(hit_Mongtage, 1.0f);
+
+	if (MyHealth <= 0) {
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Player die"));
+		return 0.0;
+	}
+
+	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	if (ActualDamage > 0.0f) {
+
+		if (MyCharacterName == "Player") {
+			Damaged();
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Player hit"));
+		}
+		else {
+			//MyHealth -= ActualDamage;
+		}
+	}
+	return 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -117,7 +162,7 @@ void AMyTestPlayer::RecoverST(float DeltaTime)
 
 void AMyTestPlayer::Damaged()
 {
-	playerHp -= 0.3;
+	MyHealth -= 0.1f;
 }
 
 void AMyTestPlayer::setUsingAttack(bool usingAttack)
@@ -129,6 +174,21 @@ void AMyTestPlayer::ShowFX()
 {
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFx, GetActorLocation());
 }
+
+//float AMyTestPlayer::get_Health() const
+//{
+//	return MyHealth;
+//}
+//
+//float AMyTestPlayer::get_maxHealth() const
+//{
+//	return MyMaxHealth;
+//}
+//
+//void AMyTestPlayer::set_health(float const new_health)
+//{
+//	MyHealth = new_health;
+//}
 
 // Called to bind functionality to input
 void AMyTestPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
