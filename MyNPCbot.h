@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "EngineMinimal.h"
 #include "GameFramework/Character.h"
 #include "MyNPCbot.generated.h"
 
@@ -38,6 +38,6 @@ public:
 
 	UFUNCTION()
 		void OnOverlapBegin(UPrimitiveComponent* OverlapperComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-			int32 OtherBodyIndex, bool bFr);
+			int32 OtherBodyIndex, bool bfromSweep, const FHitResult& sweepResult);
 
 };

@@ -5,7 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Controller_StartMenu.h"
-#include "MyTestplayer.h"
+#include "MyTestplayer.h" 
 
 // Sets default values
 AMyNPCbot::AMyNPCbot()
@@ -14,15 +14,16 @@ AMyNPCbot::AMyNPCbot()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("GateCollisionSphere"));
-	CollisionSphere->InitSphereRadius(250.f);
+	CollisionSphere->InitSphereRadius(150.f);
+	CollisionSphere->SetupAttachment(RootComponent);
 	RootComponent = CollisionSphere;
 
-	mSkeltalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ShopNPC_Obj"));
+	mSkeltalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh'/Game/GKnight/Meshes/SK_GothicKnight_VA.SK_GothicKnight_VA'"));
 	mSkeltalMesh->SetupAttachment(RootComponent);
-
+	
 	isTalk = false;
 
-	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AGateway::OnOverlapBegin());
+	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AMyNPCbot::OnOverlapBegin);
 
 }
 
@@ -44,10 +45,14 @@ void AMyNPCbot::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	ACharacter* myCharLoc = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	myCharLoc->GetActorLocation();
+	FVector PlayerPos = GetWorld()->GetFirstPlayerController()->GetCharacter()->GetActorLocation();
+	FVector myLoc = GetActorLocation();
 
-	FaceRotation(, float DeltaTime);
+	FVector Forward = (PlayerPos - myLoc);
+
+	FRotator PlayerRot = FRotationMatrix::MakeFromX(PlayerPos).Rotator();
+
+	FaceRotation(PlayerRot, 2.0f);
 }
 
 // Called to bind functionality to input
@@ -57,7 +62,8 @@ void AMyNPCbot::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void AMyNPCbot::OnOverlapBegin(UPrimitiveComponent * OverlapperComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFr)
+void AMyNPCbot::OnOverlapBegin(UPrimitiveComponent* OverlapperComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bfromSweep, const FHitResult& sweepResult)
 {
 }
 
