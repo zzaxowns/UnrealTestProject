@@ -21,6 +21,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		USkeletalMeshComponent* mSkeltalMesh;
 
+	bool isTalk;
+
+	virtual void FaceRotation(FRotator NewRotation, float DeltaTime = 0.f) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
